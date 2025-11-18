@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}Our Services - WebDev Pro{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Our Services</h1>
+        <p>Comprehensive web solutions for your business</p>
+    </div>
+</section>
+
+<section class="services-section">
+    <div class="container">
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🌐</div>
+                <h3>Web Development</h3>
+                <p>Custom website development using modern technologies like Flask, Django, React, and more. We build scalable, secure, and high-performance web applications.</p>
+                <ul class="service-features">
+                    <li>✓ Custom Web Applications</li>
+                    <li>✓ E-commerce Solutions</li>
+                    <li>✓ Content Management Systems</li>
+                    <li>✓ API Development</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">📱</div>
+                <h3>Responsive Design</h3>
+                <p>Mobile-first, responsive designs that look stunning on all devices. We ensure your website provides an optimal viewing experience across all screen sizes.</p>
+                <ul class="service-features">
+                    <li>✓ Mobile Optimization</li>
+                    <li>✓ Cross-browser Compatibility</li>
+                    <li>✓ Touch-friendly Interfaces</li>
+                    <li>✓ Progressive Web Apps</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🎨</div>
+                <h3>UI/UX Design</h3>
+                <p>Beautiful, intuitive interfaces designed with your users in mind. We create engaging experiences that convert visitors into customers.</p>
+                <ul class="service-features">
+                    <li>✓ User Research & Testing</li>
+                    <li>✓ Wireframing & Prototyping</li>
+                    <li>✓ Brand Identity Design</li>
+                    <li>✓ Interaction Design</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🗄️</div>
+                <h3>Database Solutions</h3>
+                <p>Robust database architecture and management using PostgreSQL, MySQL, SQLite3, and MongoDB. We design efficient data structures for your needs.</p>
+                <ul class="service-features">
+                    <li>✓ Database Design</li>
+                    <li>✓ Data Migration</li>
+                    <li>✓ Performance Optimization</li>
+                    <li>✓ Backup & Recovery</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🚀</div>
+                <h3>Performance Optimization</h3>
+                <p>Speed matters. We optimize your website for lightning-fast load times, better SEO rankings, and improved user experience.</p>
+                <ul class="service-features">
+                    <li>✓ Page Speed Optimization</li>
+                    <li>✓ Code Minification</li>
+                    <li>✓ Image Optimization</li>
+                    <li>✓ Caching Strategies</li>
+                </ul>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">🔒</div>
+                <h3>Security & Maintenance</h3>
+                <p>Keep your website secure and up-to-date. We provide ongoing maintenance, security updates, and technical support.</p>
+                <ul class="service-features">
+                    <li>✓ Security Audits</li>
+                    <li>✓ Regular Updates</li>
+                    <li>✓ Backup Management</li>
+                    <li>✓ 24/7 Monitoring</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="process-section">
+    <div class="container">
+        <h2 class="section-title">Our Development Process</h2>
+        <div class="process-grid">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <h4>Discovery</h4>
+                <p>We learn about your business goals, target audience, and project requirements.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <h4>Planning</h4>
+                <p>We create a detailed project roadmap with timelines, milestones, and deliverables.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <h4>Design</h4>
+                <p>Our designers create mockups and prototypes for your review and approval.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">4</div>
+                <h4>Development</h4>
+                <p>Our developers bring the design to life with clean, efficient code.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">5</div>
+                <h4>Testing</h4>
+                <p>Rigorous testing ensures everything works perfectly across all devices.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-number">6</div>
+                <h4>Launch</h4>
+                <p>We deploy your website and provide ongoing support and maintenance.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.services-section {
+    padding: 4rem 0;
+    background: var(--light-bg);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.service-card {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: 15px;
+    transition: var(--transition);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-top: 4px solid var(--primary-color);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.2);
+}
+
+.service-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.service-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.service-card > p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.service-features {
+    list-style: none;
+    padding: 0;
+}
+
+.service-features li {
+    padding: 0.5rem 0;
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.process-section {
+    padding: 4rem 0;
+    background: var(--white);
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.process-step {
+    text-align: center;
+    padding: 2rem;
+    background: var(--light-bg);
+    border-radius: 15px;
+    transition: var(--transition);
+}
+
+.process-step:hover {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    transform: scale(1.05);
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 auto 1rem;
+    transition: var(--transition);
+}
+
+.process-step:hover .step-number {
+    background: var(--white);
+    color: var(--primary-color);
+}
+
+.process-step h4 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.process-step p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}

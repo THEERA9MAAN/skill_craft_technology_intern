@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Home - WebDev Pro{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title">Build Your Digital Future</h1>
+        <p class="hero-subtitle">We create stunning, responsive websites that drive results</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('services') }}" class="btn btn-primary">Our Services</a>
+            <a href="{{ url_for('contact') }}" class="btn btn-secondary">Get Started</a>
+        </div>
+    </div>
+    <div class="hero-animation">
+        <div class="floating-card card-1"></div>
+        <div class="floating-card card-2"></div>
+        <div class="floating-card card-3"></div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Why Choose Us</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>Fast Performance</h3>
+                <p>Lightning-fast websites optimized for speed and user experience</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Fully Responsive</h3>
+                <p>Perfect display on all devices, from mobile to desktop</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3>Modern Design</h3>
+                <p>Beautiful, contemporary designs that engage your audience</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Secure & Reliable</h3>
+                <p>Built with security best practices and reliable infrastructure</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Projects Completed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">250+</div>
+                <div class="stat-label">Happy Clients</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">98%</div>
+                <div class="stat-label">Satisfaction Rate</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+    <div class="container">
+        <h2>Ready to Start Your Project?</h2>
+        <p>Let's work together to bring your vision to life</p>
+        <a href="{{ url_for('contact') }}" class="btn btn-primary">Contact Us Today</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Contact Submissions{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Contact Form Submissions</h1>
+        <p>View all messages from visitors</p>
+    </div>
+</section>
+
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-stats">
+            <div class="stat-box">
+                <h3>{{ contacts|length }}</h3>
+                <p>Total Messages</p>
+            </div>
+        </div>
+        
+        <div class="submissions-table">
+            {% if contacts %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contact in contacts %}
+                    <tr>
+                        <td>{{ contact.id }}</td>
+                        <td>{{ contact.name }}</td>
+                        <td>{{ contact.email }}</td>
+                        <td class="message-cell">{{ contact.message }}</td>
+                        <td>{{ contact.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="no-data">
+                <p>No contact submissions yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<style>
+.admin-section {
+    padding: 4rem 0;
+    background: var(--light-bg);
+    min-height: 60vh;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.stat-box {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+}
+
+.stat-box h3 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-box p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.submissions-table {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: var(--dark-bg);
+    color: var(--white);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+tr:hover {
+    background: var(--light-bg);
+}
+
+.message-cell {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.no-data {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-light);
+}
+
+@media (max-width: 768px) {
+    .submissions-table {
+        overflow-x: scroll;
+    }
+    
+    table {
+        min-width: 600px;
+    }
+}
+</style>
+{% endblock %}

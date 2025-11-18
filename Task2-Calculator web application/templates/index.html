@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Scientific Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            gap: 25px;
+            max-width: 1400px;
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .calculator-section {
+            flex: 1;
+            min-width: 320px;
+            max-width: 500px;
+        }
+
+        .mode-switcher {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.6);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .calculator {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .display-container {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            min-height: 130px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .angle-mode {
+            color: #667eea;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .expression {
+            color: rgba(255,255,255,0.6);
+            font-size: 18px;
+            min-height: 28px;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+            text-align: right;
+        }
+
+        .result {
+            color: #ffffff;
+            font-size: 42px;
+            font-weight: 700;
+            min-height: 50px;
+            text-align: right;
+            word-wrap: break-word;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .btn:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-number {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .btn-operator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-weight: 700;
+        }
+
+        .btn-function {
+            background: rgba(255,255,255,0.08);
+            font-size: 14px;
+        }
+
+        .btn-equals {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            grid-column: span 2;
+            font-weight: 700;
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        }
+
+        .converter-panel {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.2);
+            flex: 1;
+            min-width: 320px;
+            max-width: 400px;
+        }
+
+        .converter-header {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .converter-type {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .converter-type-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .converter-type-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .converter-input-group {
+            margin-bottom: 20px;
+        }
+
+        .converter-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .converter-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .converter-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .converter-select {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .converter-result {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .converter-result-label {
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .converter-result-value {
+            color: #38ef7d;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .history-panel {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 100%;
+            max-width: 400px;
+            max-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .history-header h3 {
+            color: white;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .clear-history-btn {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .clear-history-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(238, 9, 121, 0.4);
+        }
+
+        .history-list {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .history-item {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .history-item:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateX(5px);
+            border-color: #667eea;
+        }
+
+        .history-expr {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .history-result {
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .history-time {
+            color: rgba(255,255,255,0.4);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .no-history {
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            padding: 40px 20px;
+            font-style: italic;
+        }
+
+        .error {
+            color: #ff6a00 !important;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 1200px) {
+            .app-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="calculator-section">
+            <div class="mode-switcher">
+                <button class="mode-btn active" onclick="switchMode('basic')">Basic</button>
+                <button class="mode-btn" onclick="switchMode('scientific')">Scientific</button>
+                <button class="mode-btn" onclick="switchMode('programmer')">Programmer</button>
+            </div>
+
+            <div class="calculator">
+                <div class="display-container">
+                    <div class="angle-mode" id="angleMode">DEG</div>
+                    <div class="expression" id="expression"></div>
+                    <div class="result" id="result">0</div>
+                </div>
+
+                <div class="buttons-grid" id="basicButtons">
+                    <button class="btn btn-clear" onclick="clearAll()">AC</button>
+                    <button class="btn btn-function" onclick="deleteLast()">DEL</button>
+                    <button class="btn btn-function" onclick="percentage()">%</button>
+                    <button class="btn btn-operator" onclick="appendOperator('÷')">÷</button>
+                    <button class="btn btn-function" onclick="sqrt()">√</button>
+
+                    <button class="btn btn-number" onclick="appendNumber('7')">7</button>
+                    <button class="btn btn-number" onclick="appendNumber('8')">8</button>
+                    <button class="btn btn-number" onclick="appendNumber('9')">9</button>
+                    <button class="btn btn-operator" onclick="appendOperator('×')">×</button>
+                    <button class="btn btn-function" onclick="square()">x²</button>
+
+                    <button class="btn btn-number" onclick="appendNumber('4')">4</button>
+                    <button class="btn btn-number" onclick="appendNumber('5')">5</button>
+                    <button class="btn btn-number" onclick="appendNumber('6')">6</button>
+                    <button class="btn btn-operator" onclick="appendOperator('-')">−</button>
+                    <button class="btn btn-function" onclick="appendOperator('(')">( )</button>
+
+                    <button class="btn btn-number" onclick="appendNumber('1')">1</button>
+                    <button class="btn btn-number" onclick="appendNumber('2')">2</button>
+                    <button class="btn btn-number" onclick="appendNumber('3')">3</button>
+                    <button class="btn btn-operator" onclick="appendOperator('+')">+</button>
+                    <button class="btn btn-function" onclick="appendPi()">π</button>
+
+                    <button class="btn btn-number" onclick="appendNumber('0')">0</button>
+                    <button class="btn btn-number" onclick="appendNumber('.')">.</button>
+                    <button class="btn btn-equals" onclick="calculate()" id="equalsBtn">=</button>
+                </div>
+
+                <div class="buttons-grid hidden" id="scientificButtons">
+                    <button class="btn btn-function" onclick="sin()">sin</button>
+                    <button class="btn btn-function" onclick="cos()">cos</button>
+                    <button class="btn btn-function" onclick="tan()">tan</button>
+                    <button class="btn btn-function" onclick="log()">log</button>
+                    <button class="btn btn-function" onclick="ln()">ln</button>
+
+                    <button class="btn btn-function" onclick="asin()">sin⁻¹</button>
+                    <button class="btn btn-function" onclick="acos()">cos⁻¹</button>
+                    <button class="btn btn-function" onclick="atan()">tan⁻¹</button>
+                    <button class="btn btn-function" onclick="exp()">eˣ</button>
+                    <button class="btn btn-function" onclick="power()">xʸ</button>
+
+                    <button class="btn btn-number" onclick="appendNumber('7')">7</button>
+                    <button class="btn btn-number" onclick="appendNumber('8')">8</button>
+                    <button class="btn btn-number" onclick="appendNumber('9')">9</button>
+                    <button class="btn btn-clear" onclick="clearAll()">AC</button>
+                    <button class="btn btn-function" onclick="deleteLast()">DEL</button>
+
+                    <button class="btn btn-number" onclick="appendNumber('4')">4</button>
+                    <button class="btn btn-number" onclick="appendNumber('5')">5</button>
+                    <button class="btn btn-number" onclick="appendNumber('6')">6</button>
+                    <button class="btn btn-operator" onclick="appendOperator('×')">×</button>
+                    <button class="btn btn-operator" onclick="appendOperator('÷')">÷</button>
+
+                    <button class="btn btn-number" onclick="appendNumber('1')">1</button>
+                    <button class="btn btn-number" onclick="appendNumber('2')">2</button>
+                    <button class="btn btn-number" onclick="appendNumber('3')">3</button>
+                    <button class="btn btn-operator" onclick="appendOperator('+')">+</button>
+                    <button class="btn btn-operator" onclick="appendOperator('-')">−</button>
+
+                    <button class="btn btn-number" onclick="appendNumber('0')">0</button>
+                    <button class="btn btn-number" onclick="appendNumber('.')">.</button>
+                    <button class="btn btn-function" onclick="appendPi()">π</button>
+                    <button class="btn btn-function" onclick="toggleAngleMode()">DEG/RAD</button>
+                    <button class="btn btn-equals" onclick="calculate()">=</button>
+                </div>
+
+                <div class="buttons-grid hidden" id="programmerButtons">
+                    <button class="btn btn-function" onclick="hexMode()">HEX</button>
+                    <button class="btn btn-function" onclick="decMode()">DEC</button>
+                    <button class="btn btn-function" onclick="octMode()">OCT</button>
+                    <button class="btn btn-function" onclick="binMode()">BIN</button>
+                    <button class="btn btn-clear" onclick="clearAll()">AC</button>
+
+                    <button class="btn btn-function" onclick="appendNumber('A')">A</button>
+                    <button class="btn btn-function" onclick="appendNumber('B')">B</button>
+                    <button class="btn btn-function" onclick="appendNumber('C')">C</button>
+                    <button class="btn btn-function" onclick="appendNumber('D')">D</button>
+                    <button class="btn btn-function" onclick="appendNumber('E')">E</button>
+
+                    <button class="btn btn-function" onclick="appendNumber('F')">F</button>
+                    <button class="btn btn-number" onclick="appendNumber('7')">7</button>
+                    <button class="btn btn-number" onclick="appendNumber('8')">8</button>
+                    <button class="btn btn-number" onclick="appendNumber('9')">9</button>
+                    <button class="btn btn-function" onclick="deleteLast()">DEL</button>
+
+                    <button class="btn btn-operator" onclick="bitwiseAnd()">AND</button>
+                    <button class="btn btn-number" onclick="appendNumber('4')">4</button>
+                    <button class="btn btn-number" onclick="appendNumber('5')">5</button>
+                    <button class="btn btn-number" onclick="appendNumber('6')">6</button>
+                    <button class="btn btn-operator" onclick="bitwiseOr()">OR</button>
+
+                    <button class="btn btn-operator" onclick="bitwiseXor()">XOR</button>
+                    <button class="btn btn-number" onclick="appendNumber('1')">1</button>
+                    <button class="btn btn-number" onclick="appendNumber('2')">2</button>
+                    <button class="btn btn-number" onclick="appendNumber('3')">3</button>
+                    <button class="btn btn-operator" onclick="bitwiseNot()">NOT</button>
+
+                    <button class="btn btn-function" onclick="leftShift()"><<</button>
+                    <button class="btn btn-number" onclick="appendNumber('0')">0</button>
+                    <button class="btn btn-function" onclick="rightShift()">>></button>
+                    <button class="btn btn-equals" onclick="calculate()" style="grid-column: span 2">=</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="converter-panel">
+            <h2 class="converter-header">Unit Converter</h2>
+            
+            <div class="converter-type">
+                <button class="converter-type-btn active" onclick="setConverterType('length')">Length</button>
+                <button class="converter-type-btn" onclick="setConverterType('temperature')">Temp</button>
+                <button class="converter-type-btn" onclick="setConverterType('weight')">Weight</button>
+                <button class="converter-type-btn" onclick="setConverterType('time')">Time</button>
+            </div>
+
+            <div class="converter-input-group">
+                <label class="converter-label">From</label>
+                <input type="number" class="converter-input" id="converterInput" placeholder="Enter value" oninput="convert()">
+                <select class="converter-select" id="fromUnit" onchange="convert()"></select>
+            </div>
+
+            <div class="converter-input-group">
+                <label class="converter-label">To</label>
+                <select class="converter-select" id="toUnit" onchange="convert()"></select>
+            </div>
+
+            <div class="converter-result">
+                <div class="converter-result-label">Result</div>
+                <div class="converter-result-value" id="converterResult">0</div>
+            </div>
+        </div>
+
+        <div class="history-panel">
+            <div class="history-header">
+                <h3>History</h3>
+                <button class="clear-history-btn" onclick="clearHistory()">Clear All</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <p class="no-history">No calculations yet</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentExpression = '';
+        let currentResult = '0';
+        let history = [];
+        let angleMode = 'deg';
+        let currentMode = 'basic';
+        let programmerBase = 10;
+        let currentConverterType = 'length';
+
+        const expressionDisplay = document.getElementById('expression');
+        const resultDisplay = document.getElementById('result');
+        const historyList = document.getElementById('historyList');
+        const equalsBtn = document.getElementById('equalsBtn');
+        const angleModeDisplay = document.getElementById('angleMode');
+
+        const converterUnits = {
+            length: {
+                meter: 1,
+                kilometer: 0.001,
+                centimeter: 100,
+                millimeter: 1000,
+                mile: 0.000621371,
+                yard: 1.09361,
+                foot: 3.28084,
+                inch: 39.3701
+            },
+            temperature: {
+                celsius: { toBase: (v) => v, fromBase: (v) => v },
+                fahrenheit: { toBase: (v) => (v - 32) * 5/9, fromBase: (v) => v * 9/5 + 32 },
+                kelvin: { toBase: (v) => v - 273.15, fromBase: (v) => v + 273.15 }
+            },
+            weight: {
+                kilogram: 1,
+                gram: 1000,
+                milligram: 1000000,
+                pound: 2.20462,
+                ounce: 35.274
+            },
+            time: {
+                second: 1,
+                minute: 1/60,
+                hour: 1/3600,
+                day: 1/86400,
+                week: 1/604800
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHistory();
+            setupKeyboardInput();
+            setConverterType('length');
+        });
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('basicButtons').classList.add('hidden');
+            document.getElementById('scientificButtons').classList.add('hidden');
+            document.getElementById('programmerButtons').classList.add('hidden');
+            
+            document.getElementById(mode + 'Buttons').classList.remove('hidden');
+            
+            if (mode === 'scientific') {
+                angleModeDisplay.style.display = 'block';
+            } else {
+                angleModeDisplay.style.display = 'none';
+            }
+        }
+
+        function appendNumber(num) {
+            currentExpression += num;
+            updateDisplay();
+        }
+
+        function appendOperator(op) {
+            if (currentExpression === '' && op === '-') {
+                currentExpression = op;
+            } else if (currentExpression !== '') {
+                const lastChar = currentExpression[currentExpression.length - 1];
+                if ('+-×÷'.includes(lastChar) && '+-×÷'.includes(op)) {
+                    currentExpression = currentExpression.slice(0, -1) + op;
+                } else {
+                    currentExpression += op;
+                }
+            }
+            updateDisplay();
+        }
+
+        function clearAll() {
+            currentExpression = '';
+            currentResult = '0';
+            updateDisplay();
+            resultDisplay.classList.remove('error');
+        }
+
+        function deleteLast() {
+            currentExpression = currentExpression.slice(0, -1);
+            updateDisplay();
+            resultDisplay.classList.remove('error');
+        }
+
+        function updateDisplay() {
+            expressionDisplay.textContent = currentExpression || '';
+            if (currentExpression === '') {
+                resultDisplay.textContent = '0';
+            }
+        }
+
+        function appendPi() {
+            currentExpression += 'π';
+            updateDisplay();
+        }
+
+        function percentage() {
+            if (currentExpression) {
+                currentExpression += '%';
+                updateDisplay();
+            }
+        }
+
+        function sqrt() {
+            currentExpression = '√(' + currentExpression + ')';
+            updateDisplay();
+        }
+
+        function square() {
+            currentExpression = '(' + currentExpression + ')²';
+            updateDisplay();
+        }
+
+        function sin() {
+            currentExpression = 'sin(' + currentExpression + ')';
+            updateDisplay();
+        }
+
+        function cos() {
+            currentExpression = 'cos(' + currentExpression + ')';
+            updateDisplay();
+        }
+
+        function tan() {
+            currentExpression = 'tan(' + currentExpression + ')';
+            updateDisplay();
+        }
+
+        function asin() {
+            currentExpression = 'asin(' + currentExpression + ')';
+            updateDisplay();
+        }
+
+        function acos() {
+            currentExpression = 'acos(' + currentExpression + ')';
+            updateDisplay();
+        }
+
+        function atan() {
+            currentExpression = 'atan(' + currentExpression + ')';
+            updateDisplay();
+        }
+
+        function log() {
+            currentExpression = 'log(' + currentExpression + ')';
+            updateDisplay();
+        }
+
+        function ln() {
+            currentExpression = 'ln(' + currentExpression + ')';
+            updateDisplay();
+        }
+
+        function exp() {
+            currentExpression = 'e^(' + currentExpression + ')';
+            updateDisplay();
+        }
+
+        function power() {
+            currentExpression += '^';
+            updateDisplay();
+        }
+
+        function toggleAngleMode() {
+            angleMode = angleMode === 'deg' ? 'rad' : 'deg';
+            angleModeDisplay.textContent = angleMode.toUpperCase();
+        }
+
+        function calculate() {
+            if (currentExpression === '') return;
+            
+            try {
+                let expr = currentExpression;
+                
+                expr = expr.replace(/π/g, Math.PI);
+                expr = expr.replace(/×/g, '*');
+                expr = expr.replace(/÷/g, '/');
+                expr = expr.replace(/−/g, '-');
+                
+                expr = expr.replace(/(\d+)%/g, '($1/100)');
+                
+                expr = expr.replace(/√\(([^)]+)\)/g, 'Math.sqrt($1)');
+                expr = expr.replace(/\(([^)]+)\)²/g, 'Math.pow($1,2)');
+                
+                expr = expr.replace(/sin\(([^)]+)\)/g, (match, p1) => {
+                    return angleMode === 'deg' ? `Math.sin(${p1}*Math.PI/180)` : `Math.sin(${p1})`;
+                });
+                expr = expr.replace(/cos\(([^)]+)\)/g, (match, p1) => {
+                    return angleMode === 'deg' ? `Math.cos(${p1}*Math.PI/180)` : `Math.cos(${p1})`;
+                });
+                expr = expr.replace(/tan\(([^)]+)\)/g, (match, p1) => {
+                    return angleMode === 'deg' ? `Math.tan(${p1}*Math.PI/180)` : `Math.tan(${p1})`;
+                });
+                
+                expr = expr.replace(/asin\(([^)]+)\)/g, (match, p1) => {
+                    return angleMode === 'deg' ? `(Math.asin(${p1})*180/Math.PI)` : `Math.asin(${p1})`;
+                });
+                expr = expr.replace(/acos\(([^)]+)\)/g, (match, p1) => {
+                    return angleMode === 'deg' ? `(Math.acos(${p1})*180/Math.PI)` : `Math.acos(${p1})`;
+                });
+                expr = expr.replace(/atan\(([^)]+)\)/g, (match, p1) => {
+                    return angleMode === 'deg' ? `(Math.atan(${p1})*180/Math.PI)` : `Math.atan(${p1})`;
+                });
+                
+                expr = expr.replace(/log\(([^)]+)\)/g, 'Math.log10($1)');
+                expr = expr.replace(/ln\(([^)]+)\)/g, 'Math.log($1)');
+                expr = expr.replace(/e\^\(([^)]+)\)/g, 'Math.exp($1)');
+                expr = expr.replace(/([0-9.]+)\^([0-9.]+)/g, 'Math.pow($1,$2)');
+                
+                const result = eval(expr);
+                
+                if (!isFinite(result)) {
+                    throw new Error('Math error');
+                }
+                
+                let formattedResult = result;
+                if (typeof result === 'number') {
+                    if (Number.isInteger(result)) {
+                        formattedResult = result;
+                    } else {
+                        formattedResult = Math.round(result * 10000000000) / 10000000000;
+                    }
+                }
+                
+                currentResult = String(formattedResult);
+                resultDisplay.textContent = currentResult;
+                resultDisplay.classList.remove('error');
+                
+                addToHistory(currentExpression, currentResult);
+                
+            } catch (error) {
+                showError('Error');
+            }
+        }
+
+        function showError(message) {
+            resultDisplay.textContent = message;
+            resultDisplay.classList.add('error');
+            setTimeout(() => {
+                resultDisplay.classList.remove('error');
+            }, 2000);
+        }
+
+        function hexMode() {
+            if (currentResult && currentResult !== '0') {
+                const dec = parseInt(currentResult, programmerBase);
+                currentResult = dec.toString(16).toUpperCase();
+                resultDisplay.textContent = currentResult;
+                programmerBase = 16;
+            }
+        }
+
+        function decMode() {
+            if (currentResult && currentResult !== '0') {
+                const dec = parseInt(currentResult, programmerBase);
+                currentResult = dec.toString(10);
+                resultDisplay.textContent = currentResult;
+                programmerBase = 10;
+            }
+        }
+
+        function octMode() {
+            if (currentResult && currentResult !== '0') {
+                const dec = parseInt(currentResult, programmerBase);
+                currentResult = dec.toString(8);
+                resultDisplay.textContent = currentResult;
+                programmerBase = 8;
+            }
+        }
+
+        function binMode() {
+            if (currentResult && currentResult !== '0') {
+                const dec = parseInt(currentResult, programmerBase);
+                currentResult = dec.toString(2);
+                resultDisplay.textContent = currentResult;
+                programmerBase = 2;
+            }
+        }
+
+        function bitwiseAnd() {
+            currentExpression += '&';
+            updateDisplay();
+        }
+
+        function bitwiseOr() {
+            currentExpression += '|';
+            updateDisplay();
+        }
+
+        function bitwiseXor() {
+            currentExpression += '^';
+            updateDisplay();
+        }
+
+        function bitwiseNot() {
+            currentExpression = '~' + currentExpression;
+            updateDisplay();
+        }
+
+        function leftShift() {
+            currentExpression += '<<';
+            updateDisplay();
+        }
+
+        function rightShift() {
+            currentExpression += '>>';
+            updateDisplay();
+        }
+
+        function setConverterType(type) {
+            currentConverterType = type;
+            document.querySelectorAll('.converter-type-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+            
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+            
+            const units = Object.keys(converterUnits[type]);
+            units.forEach(unit => {
+                fromUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
+                toUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
+            });
+            
+            if (units.length > 1) {
+                toUnit.selectedIndex = 1;
+            }
+            
+            convert();
+        }
+
+        function convert() {
+            const input = parseFloat(document.getElementById('converterInput').value) || 0;
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            const resultDiv = document.getElementById('converterResult');
+            
+            if (currentConverterType === 'temperature') {
+                const celsius = converterUnits.temperature[fromUnit].toBase(input);
+                const result = converterUnits.temperature[toUnit].fromBase(celsius);
+                resultDiv.textContent = result.toFixed(2);
+            } else {
+                const units = converterUnits[currentConverterType];
+                const baseValue = input / units[fromUnit];
+                const result = baseValue * units[toUnit];
+                resultDiv.textContent = result.toFixed(6);
+            }
+        }
+
+        function addToHistory(expr, res) {
+            const timestamp = new Date();
+            history.unshift({ expression: expr, result: res, timestamp: timestamp });
+            
+            if (history.length > 20) {
+                history = history.slice(0, 20);
+            }
+            
+            saveHistory();
+            displayHistory();
+        }
+
+        function saveHistory() {
+            try {
+                const historyData = history.map(h => ({
+                    expression: h.expression,
+                    result: h.result,
+                    timestamp: h.timestamp.toISOString()
+                }));
+                localStorage.setItem('calcHistory', JSON.stringify(historyData));
+            } catch (e) {
+                console.error('Failed to save history', e);
+            }
+        }
+
+        function loadHistory() {
+            try {
+                const historyData = localStorage.getItem('calcHistory');
+                if (historyData) {
+                    history = JSON.parse(historyData).map(h => ({
+                        expression: h.expression,
+                        result: h.result,
+                        timestamp: new Date(h.timestamp)
+                    }));
+                }
+                displayHistory();
+            } catch (e) {
+                history = [];
+            }
+        }
+
+        function displayHistory() {
+            if (history.length === 0) {
+                historyList.innerHTML = '<p class="no-history">No calculations yet</p>';
+                return;
+            }
+            
+            historyList.innerHTML = '';
+            history.forEach((item, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.onclick = () => {
+                    currentExpression = item.expression;
+                    currentResult = item.result;
+                    updateDisplay();
+                    resultDisplay.textContent = currentResult;
+                };
+                
+                const timeStr = item.timestamp.toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                historyItem.innerHTML = `
+                    <div class="history-expr">${item.expression}</div>
+                    <div class="history-result">= ${item.result}</div>
+                    <div class="history-time">${timeStr}</div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        function clearHistory() {
+            history = [];
+            localStorage.removeItem('calcHistory');
+            displayHistory();
+        }
+
+        function setupKeyboardInput() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key >= '0' && e.key <= '9') {
+                    e.preventDefault();
+                    appendNumber(e.key);
+                } else if (e.key === '+') {
+                    e.preventDefault();
+                    appendOperator('+');
+                } else if (e.key === '-') {
+                    e.preventDefault();
+                    appendOperator('-');
+                } else if (e.key === '*') {
+                    e.preventDefault();
+                    appendOperator('×');
+                } else if (e.key === '/') {
+                    e.preventDefault();
+                    appendOperator('÷');
+                } else if (e.key === '(') {
+                    e.preventDefault();
+                    appendOperator('(');
+                } else if (e.key === ')') {
+                    e.preventDefault();
+                    appendOperator(')');
+                } else if (e.key === '.') {
+                    e.preventDefault();
+                    appendNumber('.');
+                } else if (e.key === 'Enter' || e.key === '=') {
+                    e.preventDefault();
+                    calculate();
+                } else if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    deleteLast();
+                } else if (e.key === 'Delete' || e.key === 'Escape') {
+                    e.preventDefault();
+                    clearAll();
+                } else if (e.key === '%') {
+                    e.preventDefault();
+                    percentage();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
